@@ -1,5 +1,5 @@
 ---
-description: ユーザーが PR 説明・ドラフト・CHANGELOG 用の説明を求めるときは、本リポジトリの定型見出しに従う。.github/pull_request_template.md と docs/pull-request-guide.md を参照。
+description: PR 説明・ドラフト依頼時は定型見出しに従う。ユーザーが PR 作成／本文を求めたらコピペ用の本文だけを返す。docs/pull-request-guide.md の見出し構成を参照。
 alwaysApply: true
 ---
 
@@ -14,7 +14,14 @@ alwaysApply: true
 
 （個人開発のため「スコープ外」は設けない。意図が必要なときだけ本文に書く。）
 
-**テンプレートの正本**: `.github/pull_request_template.md`  
-**人間向け説明**: `docs/pull-request-guide.md`
+**参照**: `docs/pull-request-guide.md`
 
-プレースホルダは `<!-- -->` コメントではなく、実内容に置き換えた Markdown で出力すること（GitHub 用コメントはテンプレート側にのみ残す）。
+GitHub 用の `.github/pull_request_template.md` は使わない。
+
+## 出力のしかた（重要）
+
+ユーザーが **PR を作成する**、**PR 本文を書いて**、**コピペ用**などと依頼したときは、**コピペ用の PR 本文（上記見出しの Markdown）だけ**を返す。先頭からそのまま GitHub の説明欄に貼れる形にする。
+
+次は出さない（ユーザーが別途求めた場合のみ）: タイトル案、`git` コマンド、手順の長文説明。本文以外が必要なら短く一言にとどめる。
+
+プレースホルダや `<!-- -->` は使わず、実内容で書く。
