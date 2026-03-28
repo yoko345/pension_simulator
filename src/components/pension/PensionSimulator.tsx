@@ -75,6 +75,16 @@ export function PensionSimulator() {
         <div className="space-y-10">
             <PensionHeader />
 
+            <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <h2 className="mb-4 text-lg font-medium text-slate-800">累積手取りの推移</h2>
+                <div className="h-[500px] w-full min-w-0">
+                    <PensionChart
+                        chartData={chartData}
+                        startAgeYears={startAgeYears}
+                    />
+                </div>
+            </section>
+
             <section className="grid gap-8 md:grid-cols-2">
                 <PensionForm
                     preset={preset}
@@ -108,16 +118,6 @@ export function PensionSimulator() {
                         last65={last65}
                     />
                     <PensionBreakdown last={last} />
-                </div>
-            </section>
-
-            <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-                <h2 className="mb-4 text-lg font-medium text-slate-800">累積手取りの推移</h2>
-                <div className="h-80 w-full min-w-0">
-                    <PensionChart
-                        chartData={chartData}
-                        startAgeYears={startAgeYears}
-                    />
                 </div>
             </section>
 

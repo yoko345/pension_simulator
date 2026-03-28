@@ -4,7 +4,9 @@
 
 PR 説明を毎回同じ構成にそろえ、将来の自分が履歴を読みやすくする（個人開発向けの最小構成）。
 
-GitHub の **PR テンプレート（`.github/pull_request_template.md`）は使わない**。本文は必要に応じて Cursor に依頼してコピペするか、下記見出しに沿って手で書く。
+GitHub の **PR テンプレート（`.github/pull_request_template.md`）は使わない**。
+
+**運用**: PR 本文が必要なときは Cursor にドラフトを依頼し、**返ってきた Markdown を GitHub の PR 説明欄に貼る**だけにする。`gh pr create` や `git push` のコマンド例まで求めない（リポジトリの Cursor ルールでもそのようにしている）。
 
 ## 必須セクション（見出し名は固定）
 
