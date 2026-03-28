@@ -1,0 +1,20 @@
+---
+description: ユーザーが PR 説明・ドラフト・CHANGELOG 用の説明を求めるときは、本リポジトリの定型見出しに従う。.github/pull_request_template.md と docs/pull-request-guide.md を参照。
+alwaysApply: true
+---
+
+# Pull Request 説明の形式
+
+このリポジトリ（`pension_simulator`）では、PR 本文は次の **Markdown 見出し**で構成する。
+
+1. **概要** — 何を達成するか（短く）
+2. **背景** — 動機・Issue 等
+3. **変更内容** — 具体差分、必要ならサブセクション
+4. **動作確認** — チェックリスト（`npm run dev` / `npm run build` 等）
+
+（個人開発のため「スコープ外」は設けない。意図が必要なときだけ本文に書く。）
+
+**テンプレートの正本**: `.github/pull_request_template.md`  
+**人間向け説明**: `docs/pull-request-guide.md`
+
+プレースホルダは `<!-- -->` コメントではなく、実内容に置き換えた Markdown で出力すること（GitHub 用コメントはテンプレート側にのみ残す）。
