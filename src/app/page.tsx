@@ -1,4 +1,6 @@
-import { PensionSimulator } from "@/components/PensionSimulator";
+"use client";
+
+import { PensionSimulator } from "@/components/pension/PensionSimulator";
 
 export default function Home() {
     return (
