@@ -23,7 +23,7 @@ export function PensionChartInner({ chartData, startAgeYears }: PensionChartInne
         >
             <LineChart
                 data={chartData}
-                margin={{ top: 8, right: 8, left: 8, bottom: 8 }}
+                margin={{ top: 8, right: 8, left: 8, bottom: 28 }}
             >
                 <CartesianGrid
                     strokeDasharray="3 3"
@@ -45,7 +45,7 @@ export function PensionChartInner({ chartData, startAgeYears }: PensionChartInne
                     formatter={(value: number) => formatYen(value)}
                     labelFormatter={(age) => `${age}歳時点（年次サンプル）`}
                 />
-                <Legend />
+                <Legend wrapperStyle={{ paddingTop: 20 }} />
                 <Line
                     type="monotone"
                     dataKey="cumulative65"
