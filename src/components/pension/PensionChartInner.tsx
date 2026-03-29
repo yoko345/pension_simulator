@@ -1,7 +1,7 @@
 "use client";
 
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { formatYen } from "@/lib/format-yen";
+import { formatYen, formatYenGroupedDigits } from "@/lib/format-yen";
 import { AGE_END, AGE_START } from "./pension-defaults";
 
 export type ChartRow = {
@@ -23,7 +23,7 @@ export function PensionChartInner({ chartData, startAgeYears }: PensionChartInne
         >
             <LineChart
                 data={chartData}
-                margin={{ top: 8, right: 8, left: 8, bottom: 28 }}
+                margin={{ top: 12, right: 12, left: 12, bottom: 28 }}
             >
                 <CartesianGrid
                     strokeDasharray="3 3"
@@ -37,9 +37,10 @@ export function PensionChartInner({ chartData, startAgeYears }: PensionChartInne
                     label={{ value: "年齢（歳）", position: "insideBottom", offset: -4 }}
                 />
                 <YAxis
-                    tickFormatter={(v) => `${Math.round(v / 1_000_000)}M`}
-                    tick={{ fontSize: 12 }}
-                    width={48}
+                    tickFormatter={(v) => formatYenGroupedDigits(Number(v))}
+                    tick={{ fontSize: 11 }}
+                    width={92}
+                    tickMargin={8}
                 />
                 <Tooltip
                     formatter={(value: number) => formatYen(value)}
