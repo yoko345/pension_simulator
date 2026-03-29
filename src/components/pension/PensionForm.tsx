@@ -21,12 +21,12 @@ export type PensionFormProps = {
     onLifeInsurance: (n: number) => void;
     medicalExpense: number;
     onMedicalExpense: (n: number) => void;
-    startAgeYears: number;
-    onStartAgeYears: (n: number) => void;
+    startAgeMonths: number;
+    onStartAgeMonths: (n: number) => void;
     slideFactorPercentLabel: string;
 };
 
-export function PensionForm({ preset, onPreset, basic, onBasic, employee, onEmployee, spousePension, onSpousePension, hasSpouse, onHasSpouse, spouseIncome, onSpouseIncome, householdSize, onHouseholdSize, lifeInsurance, onLifeInsurance, medicalExpense, onMedicalExpense, startAgeYears, onStartAgeYears, slideFactorPercentLabel }: PensionFormProps) {
+export function PensionForm({ preset, onPreset, basic, onBasic, employee, onEmployee, spousePension, onSpousePension, hasSpouse, onHasSpouse, spouseIncome, onSpouseIncome, householdSize, onHouseholdSize, lifeInsurance, onLifeInsurance, medicalExpense, onMedicalExpense, startAgeMonths, onStartAgeMonths, slideFactorPercentLabel }: PensionFormProps) {
     return (
         <div className="space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-lg font-medium text-slate-800">入力</h2>
@@ -146,23 +146,6 @@ export function PensionForm({ preset, onPreset, basic, onBasic, employee, onEmpl
                         onChange={(e) => onMedicalExpense(Number(e.target.value) || 0)}
                     />
                 </label>
-            </div>
-
-            <div>
-                <div className="mb-2 flex justify-between text-sm text-slate-600">
-                    <span className="font-medium text-slate-700">受給開始年齢</span>
-                    <span className="tabular-nums">{startAgeYears}歳</span>
-                </div>
-                <input
-                    type="range"
-                    min={60}
-                    max={75}
-                    step={1}
-                    value={startAgeYears}
-                    onChange={(e) => onStartAgeYears(Number(e.target.value))}
-                    className="w-full accent-slate-900"
-                />
-                <p className="mt-1 text-xs text-slate-500">繰上げは月あたり −0.4%、繰下げは +0.7%（65歳満額比）。係数: {slideFactorPercentLabel}</p>
             </div>
         </div>
     );
