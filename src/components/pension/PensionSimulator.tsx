@@ -101,6 +101,7 @@ export function PensionSimulator() {
                     <PensionChart
                         chartData={chartData}
                         startAgeYears={startAgeYears}
+                        startAgeMonths={startAgeMonths}
                     />
                 </div>
             </section>
