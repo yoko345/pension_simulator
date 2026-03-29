@@ -13,9 +13,10 @@ export type ChartRow = {
 export type PensionChartInnerProps = {
     chartData: ChartRow[];
     startAgeYears: number;
+    startAgeMonths: number;
 };
 
-export function PensionChartInner({ chartData, startAgeYears }: PensionChartInnerProps) {
+export function PensionChartInner({ chartData, startAgeYears, startAgeMonths }: PensionChartInnerProps) {
     return (
         <ResponsiveContainer
             width="100%"
@@ -58,7 +59,7 @@ export function PensionChartInner({ chartData, startAgeYears }: PensionChartInne
                 <Line
                     type="monotone"
                     dataKey="cumulativeSlide"
-                    name={`${startAgeYears}歳開始`}
+                    name={`${Math.floor(startAgeYears)}歳${startAgeMonths % 12}か月開始`}
                     stroke="#2563eb"
                     strokeWidth={2}
                     dot={false}
