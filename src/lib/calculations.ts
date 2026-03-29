@@ -33,7 +33,7 @@ export type MonthlyResult = {
 
 export const AGE_START = 60;
 export const AGE_END = 100;
-export const MONTHS = (AGE_END - AGE_START) * 12;
+const MONTHS = (AGE_END - AGE_START) * 12;
 const REF_AGE = 65;
 const EARLY_RATE = 0.004;
 const LATE_RATE = 0.007;
