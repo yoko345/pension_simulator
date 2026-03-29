@@ -17,7 +17,7 @@ export type UserInput = {
         lifeInsurance: number;
         medicalExpense: number;
     };
-    /** 受給開始年齢（60〜75・整数年） */
+    /** 受給開始年齢（60〜75、1か月ごとに指定） */
     startAgeYears: number;
 };
 

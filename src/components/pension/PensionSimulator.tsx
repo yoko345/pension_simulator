@@ -20,7 +20,9 @@ export function PensionSimulator() {
     const [householdSize, setHouseholdSize] = useState(defaultPensionInput.family.householdSize);
     const [lifeInsurance, setLifeInsurance] = useState(defaultPensionInput.insurance.lifeInsurance);
     const [medicalExpense, setMedicalExpense] = useState(defaultPensionInput.insurance.medicalExpense);
-    const [startAgeYears, setStartAgeYears] = useState(65);
+    const [startAgeMonths, setStartAgeMonths] = useState(65 * 12);
+
+    const startAgeYears = startAgeMonths / 12;
 
     const input: UserInput = useMemo(
         () => ({
@@ -77,6 +79,24 @@ export function PensionSimulator() {
 
             <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
                 <h2 className="mb-4 text-lg font-medium text-slate-800">累積手取りの推移</h2>
+                <div className="mb-4 rounded-lg border border-slate-200 bg-slate-50 p-4">
+                    <div className="mb-2 flex justify-between text-sm text-slate-600">
+                        <span className="font-medium text-slate-700">受給開始年齢</span>
+                        <span className="tabular-nums">
+                            {Math.floor(startAgeYears)}歳{startAgeMonths % 12}か月
+                        </span>
+                    </div>
+                    <input
+                        type="range"
+                        min={60 * 12}
+                        max={75 * 12}
+                        step={1}
+                        value={startAgeMonths}
+                        onChange={(e) => setStartAgeMonths(Number(e.target.value))}
+                        className="w-full accent-slate-900"
+                    />
+                    <p className="mt-1 text-xs text-slate-500">繰上げは月あたり −0.4%、繰下げは +0.7%（65歳満額比）。係数: {(slideFactor * 100).toFixed(2)}%</p>
+                </div>
                 <div className="h-[500px] w-full min-w-0">
                     <PensionChart
                         chartData={chartData}
@@ -105,8 +125,8 @@ export function PensionSimulator() {
                     onLifeInsurance={setLifeInsurance}
                     medicalExpense={medicalExpense}
                     onMedicalExpense={setMedicalExpense}
-                    startAgeYears={startAgeYears}
-                    onStartAgeYears={setStartAgeYears}
+                    startAgeMonths={startAgeMonths}
+                    onStartAgeMonths={setStartAgeMonths}
                     slideFactorPercentLabel={`${(slideFactor * 100).toFixed(2)}%`}
                 />
 
