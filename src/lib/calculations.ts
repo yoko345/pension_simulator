@@ -241,15 +241,17 @@ export function earlyTakeAheadAmount(results65: MonthlyResult[], resultsSlide: M
 
 export function buildChartRows(results65: MonthlyResult[], resultsSlide: MonthlyResult[]): { age: number; cumulative65: number; cumulativeSlide: number }[] {
     const rows: { age: number; cumulative65: number; cumulativeSlide: number }[] = [];
-    for (let i = 0; i < results65.length; i += 12) {
+    for (let i = 0; i < results65.length; i++) {
         const r65 = results65[i]!;
         const rs = resultsSlide[i]!;
         rows.push({
-            age: Math.floor(AGE_START + i / 12),
+            // 小数で月を表現（例: 65.0833... = 65歳1か月）
+            age: AGE_START + i / 12,
             cumulative65: r65.cumulativeNet,
             cumulativeSlide: rs.cumulativeNet,
         });
     }
+    // 末尾補完は月次では不要（全月分が揃っている）
     const last = MONTHS - 1;
     const r65l = results65[last]!;
     const rsll = resultsSlide[last]!;
