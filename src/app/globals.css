@@ -11,3 +11,8 @@ body {
     color: var(--foreground);
     background: var(--background);
 }
+
+@keyframes breakeven-fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}

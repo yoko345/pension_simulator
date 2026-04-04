@@ -1,7 +1,7 @@
 "use client";
 
 import { AGE_END, AGE_START, annualAt65FromInput, applyFamilyPreset, buildChartRows, earlyTakeAheadAmount, findBreakdownMonth, findBreakevenMonth, pensionAnnualFactor, runScenario, type FamilyPreset, type UserInput } from "@/lib/calculations";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { PensionBreakdown } from "./PensionBreakdown";
 import { PensionChart } from "./PensionChart";
 import { PensionDisclaimers } from "./PensionDisclaimers";
@@ -21,6 +21,18 @@ export function PensionSimulator() {
     const [lifeInsurance, setLifeInsurance] = useState(defaultPensionInput.insurance.lifeInsurance);
     const [medicalExpense, setMedicalExpense] = useState(defaultPensionInput.insurance.medicalExpense);
     const [startAgeMonths, setStartAgeMonths] = useState(65 * 12);
+    const [showBreakeven, setShowBreakeven] = useState(false);
+    const breakevenTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    // スライダー操作中は即座に非表示、停止後 1200ms でフェードイン表示
+    useEffect(() => {
+        setShowBreakeven(false);
+        if (breakevenTimerRef.current) clearTimeout(breakevenTimerRef.current);
+        breakevenTimerRef.current = setTimeout(() => setShowBreakeven(true), 1200);
+        return () => {
+            if (breakevenTimerRef.current) clearTimeout(breakevenTimerRef.current);
+        };
+    }, [startAgeMonths]);
 
     const startAgeYears = startAgeMonths / 12;
 
@@ -60,22 +72,26 @@ export function PensionSimulator() {
         setHouseholdSize(f.householdSize);
     };
 
+    const breakevenIdx = useMemo(() => {
+        if (startAgeYears === 65) return null;
+        if (startAgeYears < 65) return findBreakdownMonth(cumSlide, cum65);
+        return findBreakevenMonth(cumSlide, cum65);
+    }, [startAgeYears, cumSlide, cum65]);
+
+    const breakevenAgeYears = breakevenIdx !== null ? AGE_START + breakevenIdx / 12 : null;
+    const breakevenCumulative =
+        breakevenIdx !== null
+            ? ((resultsSlide[breakevenIdx]?.cumulativeNet ?? 0) + (results65[breakevenIdx]?.cumulativeNet ?? 0)) / 2
+            : null;
+
     const breakevenLabel = (() => {
         if (startAgeYears === 65) {
             return `65歳開始と同条件のため、常に累積手取りは同等です。`;
         }
 
-        let currentBreakevenIdx: number | null;
-        let isLookingForBreakdown = false;
+        const isLookingForBreakdown = startAgeYears < 65;
 
-        if (startAgeYears < 65) {
-            currentBreakevenIdx = findBreakdownMonth(cumSlide, cum65);
-            isLookingForBreakdown = true;
-        } else {
-            currentBreakevenIdx = findBreakevenMonth(cumSlide, cum65);
-        }
-
-        if (currentBreakevenIdx === null) {
+        if (breakevenIdx === null) {
             if (isLookingForBreakdown) {
                 return `シミュレーション終了時点（${AGE_END}歳）まで、常に累積手取りは65歳開始を上回っています。`;
             } else {
@@ -83,9 +99,8 @@ export function PensionSimulator() {
             }
         }
 
-        const ageDec = AGE_START + currentBreakevenIdx / 12;
-        const years = Math.floor(ageDec);
-        const months = Math.round((ageDec - years) * 12);
+        const years = Math.floor(breakevenAgeYears!);
+        const months = Math.round((breakevenAgeYears! - years) * 12);
         const ageString = `${years}歳${months > 0 ? `${months}か月` : ""}`;
 
         if (isLookingForBreakdown) {
@@ -124,6 +139,9 @@ export function PensionSimulator() {
                         chartData={chartData}
                         startAgeYears={startAgeYears}
                         startAgeMonths={startAgeMonths}
+                        breakevenAgeYears={breakevenAgeYears}
+                        breakevenCumulative={breakevenCumulative}
+                        showBreakeven={showBreakeven}
                     />
                 </div>
             </section>
