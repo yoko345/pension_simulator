@@ -270,15 +270,15 @@ export function buildChartRows(results65: MonthlyResult[], resultsSlide: Monthly
     return rows;
 }
 
-export function applyFamilyPreset(preset: FamilyPreset): Pick<UserInput["family"], "hasSpouse" | "spouseIncome" | "householdSize"> {
+export function applyFamilyPreset(preset: FamilyPreset): Pick<UserInput["family"], "spouseIncome" | "householdSize"> {
     switch (preset) {
         case "single":
-            return { hasSpouse: false, spouseIncome: 0, householdSize: 1 };
+            return { spouseIncome: 0, householdSize: 1 };
         case "singleEarner":
-            return { hasSpouse: true, spouseIncome: 0, householdSize: 2 };
+            return { spouseIncome: 0, householdSize: 2 };
         case "dualIncome":
-            return { hasSpouse: true, spouseIncome: 2_000_000, householdSize: 2 };
+            return { spouseIncome: 2_000_000, householdSize: 2 };
         default:
-            return { hasSpouse: false, spouseIncome: 0, householdSize: 1 };
+            return { spouseIncome: 0, householdSize: 1 };
     }
 }
