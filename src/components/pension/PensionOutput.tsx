@@ -16,9 +16,9 @@ export function PensionOutput({ breakevenLabel, takeAhead, last, last65 }: Pensi
         <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="mb-4 text-lg font-medium text-slate-800">出力</h2>
             <dl className="grid gap-3 text-sm">
-                <div className="flex justify-between gap-4 border-b border-slate-100 py-2">
+                <div className="border-b border-slate-100 py-2">
                     <dt className="text-slate-600">損益分岐（完全逆転）</dt>
-                    <dd className="text-right font-medium text-slate-900">{breakevenLabel}</dd>
+                    <dd className="mt-1 font-medium text-slate-900">{breakevenLabel}</dd>
                 </div>
                 <div className="flex justify-between gap-4 border-b border-slate-100 py-2">
                     <dt className="text-slate-600">繰上げ時の先取り累積差（65歳直前）</dt>
