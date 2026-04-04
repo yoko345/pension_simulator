@@ -112,7 +112,11 @@ export function PensionChartInner({ chartData, startAgeYears, startAgeMonths, br
                 />
                 <Tooltip
                     formatter={(value: number) => formatYen(value)}
-                    labelFormatter={(age) => `${age}歳時点（年次サンプル）`}
+                    labelFormatter={(age: number) => {
+                        const years = Math.floor(age);
+                        const months = Math.round((age - years) * 12);
+                        return months > 0 ? `${years}歳${months}か月時点` : `${years}歳時点`;
+                    }}
                 />
                 <Legend wrapperStyle={{ paddingTop: 20 }} />
                 <Line
