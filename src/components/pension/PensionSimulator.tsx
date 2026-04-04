@@ -15,7 +15,7 @@ export function PensionSimulator() {
     const [basic, setBasic] = useState(defaultPensionInput.pension.basic);
     const [employee, setEmployee] = useState(defaultPensionInput.pension.employee);
     const [spousePension, setSpousePension] = useState(defaultPensionInput.pension.spousePension ?? 0);
-    const [hasSpouse, setHasSpouse] = useState(defaultPensionInput.family.hasSpouse);
+    const hasSpouse = preset !== "single";
     const [spouseIncome, setSpouseIncome] = useState(defaultPensionInput.family.spouseIncome);
     const [householdSize, setHouseholdSize] = useState(defaultPensionInput.family.householdSize);
     const [lifeInsurance, setLifeInsurance] = useState(defaultPensionInput.insurance.lifeInsurance);
@@ -56,7 +56,6 @@ export function PensionSimulator() {
     const applyPreset = (p: FamilyPreset) => {
         setPreset(p);
         const f = applyFamilyPreset(p);
-        setHasSpouse(f.hasSpouse);
         setSpouseIncome(f.spouseIncome);
         setHouseholdSize(f.householdSize);
     };
@@ -139,8 +138,6 @@ export function PensionSimulator() {
                     onEmployee={setEmployee}
                     spousePension={spousePension}
                     onSpousePension={setSpousePension}
-                    hasSpouse={hasSpouse}
-                    onHasSpouse={setHasSpouse}
                     spouseIncome={spouseIncome}
                     onSpouseIncome={setSpouseIncome}
                     householdSize={householdSize}
@@ -149,9 +146,6 @@ export function PensionSimulator() {
                     onLifeInsurance={setLifeInsurance}
                     medicalExpense={medicalExpense}
                     onMedicalExpense={setMedicalExpense}
-                    startAgeMonths={startAgeMonths}
-                    onStartAgeMonths={setStartAgeMonths}
-                    slideFactorPercentLabel={`${(slideFactor * 100).toFixed(2)}%`}
                 />
 
                 <div className="space-y-6">

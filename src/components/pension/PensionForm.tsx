@@ -11,8 +11,6 @@ export type PensionFormProps = {
     onEmployee: (n: number) => void;
     spousePension: number;
     onSpousePension: (n: number) => void;
-    hasSpouse: boolean;
-    onHasSpouse: (v: boolean) => void;
     spouseIncome: number;
     onSpouseIncome: (n: number) => void;
     householdSize: number;
@@ -21,12 +19,11 @@ export type PensionFormProps = {
     onLifeInsurance: (n: number) => void;
     medicalExpense: number;
     onMedicalExpense: (n: number) => void;
-    startAgeMonths: number;
-    onStartAgeMonths: (n: number) => void;
-    slideFactorPercentLabel: string;
 };
 
-export function PensionForm({ preset, onPreset, basic, onBasic, employee, onEmployee, spousePension, onSpousePension, hasSpouse, onHasSpouse, spouseIncome, onSpouseIncome, householdSize, onHouseholdSize, lifeInsurance, onLifeInsurance, medicalExpense, onMedicalExpense, startAgeMonths, onStartAgeMonths, slideFactorPercentLabel }: PensionFormProps) {
+export function PensionForm({ preset, onPreset, basic, onBasic, employee, onEmployee, spousePension, onSpousePension, spouseIncome, onSpouseIncome, householdSize, onHouseholdSize, lifeInsurance, onLifeInsurance, medicalExpense, onMedicalExpense }: PensionFormProps) {
+    const hasSpouse = preset !== "single";
+
     return (
         <div className="space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-lg font-medium text-slate-800">入力</h2>
@@ -91,14 +88,6 @@ export function PensionForm({ preset, onPreset, basic, onBasic, employee, onEmpl
 
             <div className="space-y-3">
                 <p className="text-sm font-medium text-slate-700">世帯情報</p>
-                <label className="flex items-center gap-2 text-sm text-slate-600">
-                    <input
-                        type="checkbox"
-                        checked={hasSpouse}
-                        onChange={(e) => onHasSpouse(e.target.checked)}
-                    />
-                    配偶者あり
-                </label>
                 {hasSpouse && (
                     <label className="block text-sm text-slate-600">
                         配偶者所得（年額・円）
