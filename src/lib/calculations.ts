@@ -33,8 +33,8 @@ export type MonthlyResult = {
 
 export const AGE_START = 60;
 export const AGE_END = 100;
+export const AGE_STANDARD = 65; // 標準受給開始年齢
 const MONTHS = (AGE_END - AGE_START) * 12;
-const REF_AGE = 65;
 const EARLY_RATE = 0.004;
 const LATE_RATE = 0.007;
 
@@ -57,7 +57,7 @@ function monthsFrom60ToAgeYears(ageYears: number): number {
 
 /** 65歳満額を基準とした年額係数 */
 export function pensionAnnualFactor(startAgeYears: number): number {
-    const monthsEarly = Math.round((REF_AGE - startAgeYears) * 12);
+    const monthsEarly = Math.round((AGE_STANDARD - startAgeYears) * 12);
     if (monthsEarly > 0) {
         return 1 - EARLY_RATE * monthsEarly;
     }
@@ -109,7 +109,7 @@ function spouseDeductionAmount(spouseIncome: number): number {
 }
 
 function nursingInsuranceRate(ageYears: number): number {
-    if (ageYears < 65) return 0;
+    if (ageYears < AGE_STANDARD) return 0;
     if (ageYears < 75) return 0.018;
     return 0.024;
 }
@@ -234,7 +234,7 @@ export function annualAt65FromInput(input: UserInput): number {
 
 /** 繰上げ等で65歳到達直前（65歳開始がまだ0円のとき）の先取り累積差 */
 export function earlyTakeAheadAmount(results65: MonthlyResult[], resultsSlide: MonthlyResult[]): number {
-    const idx = monthsFrom60ToAgeYears(REF_AGE) - 1;
+    const idx = monthsFrom60ToAgeYears(AGE_STANDARD) - 1;
     if (idx < 0) return 0;
     return resultsSlide[idx]!.cumulativeNet - results65[idx]!.cumulativeNet;
 }

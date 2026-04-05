@@ -1,6 +1,6 @@
 "use client";
 
-import { AGE_END, AGE_START, annualAt65FromInput, applyFamilyPreset, buildChartRows, earlyTakeAheadAmount, findBreakdownMonth, findBreakevenMonth, pensionAnnualFactor, runScenario, type FamilyPreset, type UserInput } from "@/lib/calculations";
+import { AGE_END, AGE_STANDARD, AGE_START, annualAt65FromInput, applyFamilyPreset, buildChartRows, earlyTakeAheadAmount, findBreakdownMonth, findBreakevenMonth, pensionAnnualFactor, runScenario, type FamilyPreset, type UserInput } from "@/lib/calculations";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PensionBreakdown } from "./PensionBreakdown";
 import { PensionChart } from "./PensionChart";
@@ -20,7 +20,7 @@ export function PensionSimulator() {
     const [householdSize, setHouseholdSize] = useState(defaultPensionInput.family.householdSize);
     const [lifeInsurance, setLifeInsurance] = useState(defaultPensionInput.insurance.lifeInsurance);
     const [medicalExpense, setMedicalExpense] = useState(defaultPensionInput.insurance.medicalExpense);
-    const [startAgeMonths, setStartAgeMonths] = useState(65 * 12);
+    const [startAgeMonths, setStartAgeMonths] = useState(AGE_STANDARD * 12);
     const [showBreakeven, setShowBreakeven] = useState(false);
     const breakevenTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -51,7 +51,7 @@ export function PensionSimulator() {
     );
 
     const annual65 = useMemo(() => annualAt65FromInput(input), [input]);
-    const results65 = useMemo(() => runScenario(input, 65, annual65), [input, annual65]);
+    const results65 = useMemo(() => runScenario(input, AGE_STANDARD, annual65), [input, annual65]);
     const resultsSlide = useMemo(() => runScenario(input, startAgeYears, annual65), [input, startAgeYears, annual65]);
 
     const chartData = useMemo(() => buildChartRows(results65, resultsSlide), [results65, resultsSlide]);
@@ -73,8 +73,8 @@ export function PensionSimulator() {
     };
 
     const breakevenIdx = useMemo(() => {
-        if (startAgeYears === 65) return null;
-        if (startAgeYears < 65) return findBreakdownMonth(cumSlide, cum65);
+        if (startAgeYears === AGE_STANDARD) return null;
+        if (startAgeYears < AGE_STANDARD) return findBreakdownMonth(cumSlide, cum65);
         return findBreakevenMonth(cumSlide, cum65);
     }, [startAgeYears, cumSlide, cum65]);
 
@@ -85,11 +85,11 @@ export function PensionSimulator() {
             : null;
 
     const breakevenLabel = (() => {
-        if (startAgeYears === 65) {
+        if (startAgeYears === AGE_STANDARD) {
             return `65歳開始と同条件のため、常に累積手取りは同等です。`;
         }
 
-        const isLookingForBreakdown = startAgeYears < 65;
+        const isLookingForBreakdown = startAgeYears < AGE_STANDARD;
 
         if (breakevenIdx === null) {
             if (isLookingForBreakdown) {
@@ -170,6 +170,7 @@ export function PensionSimulator() {
                     <PensionOutput
                         breakevenLabel={breakevenLabel}
                         takeAhead={takeAhead}
+                        startAgeYears={startAgeYears}
                         last={last}
                         last65={last65}
                     />
