@@ -182,11 +182,21 @@ export function PensionSimulator() {
 
             <section className="space-y-3">
                 <h2 className="font-medium text-slate-800">参考資料</h2>
+                {/* PC: iframeで表示 */}
                 <iframe
                     src="/api/pdf"
-                    className="h-[700px] w-full rounded-xl border border-slate-200"
+                    className="hidden h-[700px] w-full rounded-xl border border-slate-200 md:block"
                     title="Pension Net Income Strategy"
                 />
+                {/* モバイル: リンクボタンで開く */}
+                <a
+                    href="/api/pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-slate-50 py-6 text-sm font-medium text-slate-700 hover:bg-slate-100 md:hidden"
+                >
+                    PDFを開く
+                </a>
             </section>
         </div>
     );
