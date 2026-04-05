@@ -1,6 +1,6 @@
 export async function GET() {
     const res = await fetch(
-        "https://raw.githubusercontent.com/yoko345/pension_simulator/main/public/Pension_Net_Income_Strategy.pdf",
+        "https://media.githubusercontent.com/media/yoko345/pension_simulator/main/public/Pension_Net_Income_Strategy.pdf",
     );
 
     if (!res.ok) {
