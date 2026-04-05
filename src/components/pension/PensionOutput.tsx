@@ -37,13 +37,18 @@ export function PensionOutput({ breakevenLabel, takeAhead, last, last65 }: Pensi
                         </div>
                     </div>
                 </div>
-                <div className="flex justify-between gap-4 border-b border-slate-100 py-2">
-                    <dt className="text-slate-600">累積手取り（スライド・{AGE_END}歳手前）</dt>
-                    <dd className="text-right tabular-nums text-slate-900">{formatYen(last.cumulativeNet)}</dd>
-                </div>
-                <div className="flex justify-between gap-4 py-2">
-                    <dt className="text-slate-600">累積手取り（65歳開始）</dt>
-                    <dd className="text-right tabular-nums text-slate-900">{formatYen(last65.cumulativeNet)}</dd>
+                <div className="py-2">
+                    <dt className="text-slate-600">累積手取り（{AGE_END}歳手前）</dt>
+                    <div className="mt-1 space-y-1">
+                        <div className="flex justify-between gap-4">
+                            <span className="pl-3 text-xs text-slate-500">65歳開始</span>
+                            <dd className="text-right tabular-nums text-slate-900">{formatYen(last65.cumulativeNet)}</dd>
+                        </div>
+                        <div className="flex justify-between gap-4">
+                            <span className="pl-3 text-xs text-slate-500">スライド開始</span>
+                            <dd className="text-right tabular-nums text-slate-900">{formatYen(last.cumulativeNet)}</dd>
+                        </div>
+                    </div>
                 </div>
             </dl>
         </div>
