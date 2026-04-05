@@ -183,7 +183,7 @@ export function PensionSimulator() {
             <section className="space-y-3">
                 <h2 className="font-medium text-slate-800">参考資料</h2>
                 <iframe
-                    src="/Pension_Net_Income_Strategy.pdf"
+                    src="https://raw.githubusercontent.com/yoko345/pension_simulator/main/public/Pension_Net_Income_Strategy.pdf"
                     className="h-[700px] w-full rounded-xl border border-slate-200"
                     title="Pension Net Income Strategy"
                 />
