@@ -42,15 +42,6 @@ const BASIC_DEDUCTION = 480_000;
 const RESIDENT_PER_CAPITA = 5_000;
 const RESIDENT_INCOME_RATE = 0.1;
 
-/** 東京都 住民税非課税の簡易判定（総所得相当 × 世帯人数） */
-const NON_TAX_THRESHOLDS: Record<number, number> = {
-    1: 450_000,
-    2: 1_050_000,
-    3: 1_350_000,
-    4: 1_650_000,
-    5: 1_950_000,
-};
-
 function monthsFrom60ToAgeYears(ageYears: number): number {
     return Math.round((ageYears - AGE_START) * 12);
 }
@@ -78,27 +69,18 @@ function publicPensionDeduction65(annualPensionIncome: number): number {
     return Math.floor(n * 0.05 + 1_060_000);
 }
 
-/** 所得税 簡易累進（設計書の代表例） */
-function incomeTaxSimplified(taxableIncome: number): number {
+/** 所得税（累進課税・設計書準拠）+ 復興特別所得税 1.021 */
+function calcIncomeTax(taxableIncome: number): number {
     if (taxableIncome <= 0) return 0;
-    let remaining = taxableIncome;
-    let tax = 0;
-    const bands: { limit: number; rate: number }[] = [
-        { limit: 1_950_000, rate: 0.05 },
-        { limit: 3_300_000, rate: 0.1 },
-        { limit: 6_950_000, rate: 0.2 },
-        { limit: Infinity, rate: 0.23 },
-    ];
-    let prev = 0;
-    for (const b of bands) {
-        const width = Math.min(remaining, b.limit - prev);
-        if (width <= 0) break;
-        tax += width * b.rate;
-        remaining -= width;
-        prev = b.limit;
-        if (remaining <= 0) break;
-    }
-    return Math.floor(tax);
+    let tax: number;
+    if (taxableIncome <= 1_950_000)       tax = taxableIncome * 0.05;
+    else if (taxableIncome <= 3_300_000)  tax = taxableIncome * 0.10 - 97_500;
+    else if (taxableIncome <= 6_950_000)  tax = taxableIncome * 0.20 - 427_500;
+    else if (taxableIncome <= 9_000_000)  tax = taxableIncome * 0.23 - 636_000;
+    else if (taxableIncome <= 18_000_000) tax = taxableIncome * 0.33 - 1_536_000;
+    else if (taxableIncome <= 40_000_000) tax = taxableIncome * 0.40 - 2_796_000;
+    else                                  tax = taxableIncome * 0.45 - 4_796_000;
+    return Math.floor(tax * 1.021); // 復興特別所得税
 }
 
 function spouseDeductionAmount(spouseIncome: number): number {
@@ -185,11 +167,11 @@ function nursingCareAnnual(ageYears: number, pensionAnnual: number, householdSiz
     return CARE_STAGES.find((r) => r.level === stage)?.fee ?? 0;
 }
 
+/** 住民税非課税判定（設計書準拠）: 450,000 + 350,000 × 世帯人数 */
 function isResidentTaxExempt(householdSize: number, pensionAnnual: number, spouseIncome: number): boolean {
-    const total = pensionAnnual + spouseIncome;
-    const size = Math.min(Math.max(householdSize, 1), 5);
-    const th = NON_TAX_THRESHOLDS[size] ?? NON_TAX_THRESHOLDS[5];
-    return total <= th;
+    const income = Math.max(0, pensionAnnual + spouseIncome - publicPensionDeduction65(pensionAnnual));
+    const threshold = 450_000 + 350_000 * Math.max(householdSize, 1);
+    return income <= threshold;
 }
 
 export type MonthComputation = {
@@ -228,7 +210,7 @@ function computeOneMonth(ageYears: number, monthlyGross: number, input: Pick<Use
 
     const taxable = Math.max(0, miscFromPension - BASIC_DEDUCTION - spouseDed - life - medical - socialAnnual);
 
-    const incomeTax = incomeTaxSimplified(taxable);
+    const incomeTax = calcIncomeTax(taxable);
 
     let residentTax = 0;
     if (!isResidentTaxExempt(input.family.householdSize, pensionAnnual, input.family.spouseIncome)) {

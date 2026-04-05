@@ -20,7 +20,7 @@ export function PensionDisclaimers() {
                     </tr>
                     <tr className="border-b border-amber-100">
                         <td className="py-2 pr-4">税金モデル</td>
-                        <td className="py-2">所得税は課税所得に対する簡易累進（5/10/20/23%）。住民税は所得割10%＋均等割5,000円／年、非課税は世帯人数別の簡易しきい値で判定しています。</td>
+                        <td className="py-2">所得税は7段階の累進課税（5〜45%）＋復興特別所得税（×1.021）。住民税は所得割10%＋均等割5,000円／年。非課税判定は「所得 ≦ 45万円＋35万円×世帯人数」で判定しています。</td>
                     </tr>
                     <tr>
                         <td className="py-2 pr-4">注意</td>
@@ -158,6 +158,92 @@ export function PensionDisclaimers() {
                     </tbody>
                 </table>
                 <p className="text-xs text-slate-500">※ 本来20段階ある区分を簡略化しています。給与・不動産収入がある場合や世帯状況によっては実際の保険料と異なる場合があります。</p>
+            </div>
+
+            {/* 税金の詳細 */}
+            <div className="space-y-4">
+                <h3 className="font-medium text-amber-950">税金の詳細</h3>
+                <p className="text-xs text-slate-600">
+                    課税所得 ＝ 年金収入から公的年金控除・基礎控除・各種控除を差し引いた金額
+                </p>
+
+                {/* 所得税 */}
+                <div>
+                    <p className="mb-1 text-xs font-medium text-slate-700">所得税（累進課税）＋ 復興特別所得税（×1.021）</p>
+                    <table className="w-full border-collapse text-left text-xs">
+                        <thead>
+                            <tr className="border-b border-amber-200">
+                                <th className="py-1 pr-3 font-medium">課税所得</th>
+                                <th className="py-1 pr-3 font-medium">税率</th>
+                                <th className="py-1 font-medium">控除額</th>
+                            </tr>
+                        </thead>
+                        <tbody className="text-slate-700">
+                            <tr className="border-b border-amber-100">
+                                <td className="py-1 pr-3">195万円以下</td>
+                                <td className="py-1 pr-3">5%</td>
+                                <td className="py-1">0円</td>
+                            </tr>
+                            <tr className="border-b border-amber-100">
+                                <td className="py-1 pr-3">195〜330万円以下</td>
+                                <td className="py-1 pr-3">10%</td>
+                                <td className="py-1">97,500円</td>
+                            </tr>
+                            <tr className="border-b border-amber-100">
+                                <td className="py-1 pr-3">330〜695万円以下</td>
+                                <td className="py-1 pr-3">20%</td>
+                                <td className="py-1">427,500円</td>
+                            </tr>
+                            <tr className="border-b border-amber-100">
+                                <td className="py-1 pr-3">695〜900万円以下</td>
+                                <td className="py-1 pr-3">23%</td>
+                                <td className="py-1">636,000円</td>
+                            </tr>
+                            <tr className="border-b border-amber-100">
+                                <td className="py-1 pr-3">900〜1,800万円以下</td>
+                                <td className="py-1 pr-3">33%</td>
+                                <td className="py-1">1,536,000円</td>
+                            </tr>
+                            <tr className="border-b border-amber-100">
+                                <td className="py-1 pr-3">1,800〜4,000万円以下</td>
+                                <td className="py-1 pr-3">40%</td>
+                                <td className="py-1">2,796,000円</td>
+                            </tr>
+                            <tr>
+                                <td className="py-1 pr-3">4,000万円超</td>
+                                <td className="py-1 pr-3">45%</td>
+                                <td className="py-1">4,796,000円</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                {/* 住民税 */}
+                <div>
+                    <p className="mb-1 text-xs font-medium text-slate-700">住民税</p>
+                    <table className="w-full border-collapse text-left text-xs">
+                        <thead>
+                            <tr className="border-b border-amber-200">
+                                <th className="py-1 pr-3 font-medium">種別</th>
+                                <th className="py-1 font-medium">金額</th>
+                            </tr>
+                        </thead>
+                        <tbody className="text-slate-700">
+                            <tr className="border-b border-amber-100">
+                                <td className="py-1 pr-3">所得割</td>
+                                <td className="py-1">課税所得 × 10%</td>
+                            </tr>
+                            <tr className="border-b border-amber-100">
+                                <td className="py-1 pr-3">均等割</td>
+                                <td className="py-1">5,000円／年</td>
+                            </tr>
+                            <tr>
+                                <td className="py-1 pr-3">非課税ライン</td>
+                                <td className="py-1">所得 ≦ 45万円 ＋ 35万円 × 世帯人数</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
     );
