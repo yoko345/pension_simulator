@@ -304,24 +304,15 @@ export function buildChartRows(results65: MonthlyResult[], resultsSlide: Monthly
             cumulativeSlide: rs.cumulativeNet,
         });
     }
-    // 末尾補完は月次では不要（全月分が揃っている）
+    // 最終行の age を AGE_END（100）に補正して軸目盛りと合わせる
     const last = MONTHS - 1;
     const r65l = results65[last]!;
     const rsll = resultsSlide[last]!;
-    const lastAgeFloor = Math.floor(AGE_START + last / 12);
-    if (rows[rows.length - 1]?.age !== lastAgeFloor) {
-        rows.push({
-            age: lastAgeFloor,
-            cumulative65: r65l.cumulativeNet,
-            cumulativeSlide: rsll.cumulativeNet,
-        });
-    } else {
-        rows[rows.length - 1] = {
-            age: lastAgeFloor,
-            cumulative65: r65l.cumulativeNet,
-            cumulativeSlide: rsll.cumulativeNet,
-        };
-    }
+    rows[rows.length - 1] = {
+        age: AGE_END,
+        cumulative65: r65l.cumulativeNet,
+        cumulativeSlide: rsll.cumulativeNet,
+    };
     return rows;
 }
 

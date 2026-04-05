@@ -100,7 +100,7 @@ export function PensionChartInner({ chartData, startAgeYears, startAgeMonths, br
                 <XAxis
                     dataKey="age"
                     type="number"
-                    domain={[AGE_START, AGE_END - 1]}
+                    domain={[AGE_START, AGE_END]}
                     tick={{ fontSize: 12 }}
                     label={{ value: "年齢（歳）", position: "insideBottom", offset: -4 }}
                 />
