@@ -108,10 +108,41 @@ function spouseDeductionAmount(spouseIncome: number): number {
     return Math.floor(380_000 * t);
 }
 
-function nursingInsuranceRate(ageYears: number): number {
-    if (ageYears < AGE_STANDARD) return 0;
-    if (ageYears < 75) return 0.018;
-    return 0.024;
+const NHI_BASIC_DEDUCTION = 430_000; // 国保所得計算用基礎控除
+
+export type HealthInsuranceDetail = {
+    /** 国保 or 後期高齢者医療制度 */
+    type: "国保" | "後期高齢者";
+    /** 年額: 基礎分（後期高齢者の場合は保険料全体） */
+    base: number;
+    /** 年額: 支援金分（国保のみ、後期高齢者は 0） */
+    support: number;
+    /** 年額: 介護分（国保40〜64歳のみ、それ以外は 0） */
+    care: number;
+    /** 年額合計 */
+    total: number;
+};
+
+/** 健康保険料の内訳を返す（区ベース・2026年） */
+export function calcHealthInsuranceDetail(ageYears: number, pensionAnnual: number, householdSize: number): HealthInsuranceDetail {
+    const income = Math.max(0, pensionAnnual - publicPensionDeduction65(pensionAnnual) - NHI_BASIC_DEDUCTION);
+
+    if (ageYears >= 75) {
+        const total = Math.min(income * 0.0967 + 47_300, 800_000);
+        return { type: "後期高齢者", base: total, support: 0, care: 0, total };
+    }
+
+    const base    = Math.min(income * 0.0771 + 47_300 * householdSize, 660_000);
+    const support = Math.min(income * 0.0269 + 16_800 * householdSize, 260_000);
+    // 介護分：40〜64歳のみ（本人が対象、介護対象人数=1）
+    const care    = (ageYears >= 40 && ageYears < AGE_STANDARD)
+        ? Math.min(income * 0.0223 + 16_600, 170_000)
+        : 0;
+    return { type: "国保", base, support, care, total: base + support + care };
+}
+
+function healthInsuranceAnnual(ageYears: number, pensionAnnual: number, householdSize: number): number {
+    return calcHealthInsuranceDetail(ageYears, pensionAnnual, householdSize).total;
 }
 
 function isResidentTaxExempt(householdSize: number, pensionAnnual: number, spouseIncome: number): boolean {
@@ -143,10 +174,9 @@ function computeOneMonth(ageYears: number, monthlyGross: number, input: Pick<Use
     }
 
     const pensionAnnual = monthlyGross * 12;
-    const health = monthlyGross * 0.1;
-    const nursing = monthlyGross * nursingInsuranceRate(ageYears);
-    const insuranceMonthly = health + nursing;
-    const socialAnnual = insuranceMonthly * 12;
+    const annualInsurance = healthInsuranceAnnual(ageYears, pensionAnnual, input.family.householdSize);
+    const insuranceMonthly = annualInsurance / 12;
+    const socialAnnual = annualInsurance;
 
     const miscFromPension = Math.max(0, pensionAnnual - publicPensionDeduction65(pensionAnnual));
 
