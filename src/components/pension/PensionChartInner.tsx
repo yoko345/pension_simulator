@@ -109,6 +109,7 @@ export function PensionChartInner({ chartData, startAgeYears, startAgeMonths, br
                     tick={{ fontSize: 11 }}
                     width={92}
                     tickMargin={8}
+                    domain={[0, 80_000_000]}
                 />
                 <Tooltip
                     formatter={(value: number) => formatYen(value)}
