@@ -32,9 +32,7 @@ export function PensionDisclaimers() {
             {/* 健康保険の詳細 */}
             <div className="space-y-4">
                 <h3 className="font-medium text-amber-950">健康保険の詳細</h3>
-                <p className="text-xs text-slate-600">
-                    保険料の計算に使う「所得」は、年金収入から公的年金控除と基礎控除（430,000円）を差し引いた金額です。差し引いた結果がマイナスになる場合は0円として扱います。
-                </p>
+                <p className="text-xs text-slate-600">保険料の計算に使う「所得」は、年金収入から公的年金控除と基礎控除（430,000円）を差し引いた金額です。差し引いた結果がマイナスになる場合は0円として扱います。</p>
 
                 {/* 国民健康保険 */}
                 <div>
@@ -91,6 +89,75 @@ export function PensionDisclaimers() {
                         </tbody>
                     </table>
                 </div>
+            </div>
+
+            {/* 介護保険の詳細 */}
+            <div className="space-y-4">
+                <h3 className="font-medium text-amber-950">介護保険の詳細</h3>
+                <p className="text-xs text-slate-600">65歳以上は所得・世帯の課税状況に応じた段階制（区・令和6〜8年度）。40〜64歳分は国民健康保険の介護分に含まれます。</p>
+                <p className="text-xs text-slate-600">所得 ＝ 年金収入から公的年金控除を差し引いた金額</p>
+                <table className="w-full border-collapse text-left text-xs">
+                    <thead>
+                        <tr className="border-b border-amber-200">
+                            <th className="py-1 pr-3 font-medium">段階</th>
+                            <th className="py-1 pr-3 font-medium">対象</th>
+                            <th className="py-1 font-medium">年額</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-slate-700">
+                        <tr className="border-b border-amber-100">
+                            <td className="py-1 pr-3">第1段階</td>
+                            <td className="py-1 pr-3">世帯全員非課税・所得80.9万円以下</td>
+                            <td className="py-1">20,900円</td>
+                        </tr>
+                        <tr className="border-b border-amber-100">
+                            <td className="py-1 pr-3">第2段階</td>
+                            <td className="py-1 pr-3">世帯全員非課税・所得120万円以下</td>
+                            <td className="py-1">31,600円</td>
+                        </tr>
+                        <tr className="border-b border-amber-100">
+                            <td className="py-1 pr-3">第3段階</td>
+                            <td className="py-1 pr-3">世帯全員非課税・所得120万円超</td>
+                            <td className="py-1">50,300円</td>
+                        </tr>
+                        <tr className="border-b border-amber-100">
+                            <td className="py-1 pr-3">第4段階</td>
+                            <td className="py-1 pr-3">本人非課税・世帯に課税者あり・所得80万円以下</td>
+                            <td className="py-1">62,400円</td>
+                        </tr>
+                        <tr className="border-b border-amber-100">
+                            <td className="py-1 pr-3">第5段階（基準額）</td>
+                            <td className="py-1 pr-3">本人非課税・世帯に課税者あり・所得80万円超</td>
+                            <td className="py-1">73,300円</td>
+                        </tr>
+                        <tr className="border-b border-amber-100">
+                            <td className="py-1 pr-3">第6段階</td>
+                            <td className="py-1 pr-3">本人課税・所得120万円未満</td>
+                            <td className="py-1">84,300円</td>
+                        </tr>
+                        <tr className="border-b border-amber-100">
+                            <td className="py-1 pr-3">第7段階</td>
+                            <td className="py-1 pr-3">本人課税・所得120〜210万円未満</td>
+                            <td className="py-1">91,700円</td>
+                        </tr>
+                        <tr className="border-b border-amber-100">
+                            <td className="py-1 pr-3">第8段階</td>
+                            <td className="py-1 pr-3">本人課税・所得210〜320万円未満</td>
+                            <td className="py-1">102,700円</td>
+                        </tr>
+                        <tr className="border-b border-amber-100">
+                            <td className="py-1 pr-3">第9段階</td>
+                            <td className="py-1 pr-3">本人課税・所得320〜400万円未満</td>
+                            <td className="py-1">124,700円</td>
+                        </tr>
+                        <tr>
+                            <td className="py-1 pr-3">第10段階</td>
+                            <td className="py-1 pr-3">本人課税・所得400万円以上</td>
+                            <td className="py-1">132,000円</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p className="text-xs text-slate-500">※ 本来20段階ある区分を簡略化しています。給与・不動産収入がある場合や世帯状況によっては実際の保険料と異なる場合があります。</p>
             </div>
         </section>
     );

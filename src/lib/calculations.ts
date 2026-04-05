@@ -132,17 +132,57 @@ export function calcHealthInsuranceDetail(ageYears: number, pensionAnnual: numbe
         return { type: "後期高齢者", base: total, support: 0, care: 0, total };
     }
 
-    const base    = Math.min(income * 0.0771 + 47_300 * householdSize, 660_000);
+    const base = Math.min(income * 0.0771 + 47_300 * householdSize, 660_000);
     const support = Math.min(income * 0.0269 + 16_800 * householdSize, 260_000);
     // 介護分：40〜64歳のみ（本人が対象、介護対象人数=1）
-    const care    = (ageYears >= 40 && ageYears < AGE_STANDARD)
-        ? Math.min(income * 0.0223 + 16_600, 170_000)
-        : 0;
+    const care = ageYears >= 40 && ageYears < AGE_STANDARD ? Math.min(income * 0.0223 + 16_600, 170_000) : 0;
     return { type: "国保", base, support, care, total: base + support + care };
 }
 
 function healthInsuranceAnnual(ageYears: number, pensionAnnual: number, householdSize: number): number {
     return calcHealthInsuranceDetail(ageYears, pensionAnnual, householdSize).total;
+}
+
+// 介護保険料テーブル（区・令和6〜8年度）
+const CARE_STAGES: { level: number; fee: number }[] = [
+    { level: 1, fee: 20_900 },
+    { level: 2, fee: 31_600 },
+    { level: 3, fee: 50_300 },
+    { level: 4, fee: 62_400 },
+    { level: 5, fee: 73_300 },
+    { level: 6, fee: 84_300 },
+    { level: 7, fee: 91_700 },
+    { level: 8, fee: 102_700 },
+    { level: 9, fee: 124_700 },
+    { level: 10, fee: 132_000 },
+];
+
+function getCareStage(income: number, householdTaxExempt: boolean, selfTaxExempt: boolean): number {
+    if (householdTaxExempt) {
+        if (income <= 809_000) return 1;
+        if (income <= 1_200_000) return 2;
+        return 3;
+    }
+    if (selfTaxExempt) {
+        if (income <= 800_000) return 4;
+        return 5;
+    }
+    if (income < 1_200_000) return 6;
+    if (income < 2_100_000) return 7;
+    if (income < 3_200_000) return 8;
+    if (income < 4_000_000) return 9;
+    return 10;
+}
+
+/** 介護保険料（年額）: 65歳以上のみ。40〜64歳は国保の介護分に含む。 */
+function nursingCareAnnual(ageYears: number, pensionAnnual: number, householdSize: number, spouseIncome: number): number {
+    if (ageYears < AGE_STANDARD) return 0;
+    // 設計書：所得 = max(0, 年金収入 - 公的年金控除)
+    const income = Math.max(0, pensionAnnual - publicPensionDeduction65(pensionAnnual));
+    const householdTaxExempt = isResidentTaxExempt(householdSize, pensionAnnual, spouseIncome);
+    const selfTaxExempt = isResidentTaxExempt(1, pensionAnnual, 0);
+    const stage = getCareStage(income, householdTaxExempt, selfTaxExempt);
+    return CARE_STAGES.find((r) => r.level === stage)?.fee ?? 0;
 }
 
 function isResidentTaxExempt(householdSize: number, pensionAnnual: number, spouseIncome: number): boolean {
@@ -174,9 +214,10 @@ function computeOneMonth(ageYears: number, monthlyGross: number, input: Pick<Use
     }
 
     const pensionAnnual = monthlyGross * 12;
-    const annualInsurance = healthInsuranceAnnual(ageYears, pensionAnnual, input.family.householdSize);
-    const insuranceMonthly = annualInsurance / 12;
-    const socialAnnual = annualInsurance;
+    const annualHealth = healthInsuranceAnnual(ageYears, pensionAnnual, input.family.householdSize);
+    const annualCare = nursingCareAnnual(ageYears, pensionAnnual, input.family.householdSize, input.family.spouseIncome);
+    const insuranceMonthly = (annualHealth + annualCare) / 12;
+    const socialAnnual = annualHealth + annualCare;
 
     const miscFromPension = Math.max(0, pensionAnnual - publicPensionDeduction65(pensionAnnual));
 
