@@ -7,12 +7,13 @@ import { AGE_END } from "./pension-defaults";
 export type PensionOutputProps = {
     breakevenLabel: string;
     takeAhead: number;
+    lateDelay: number;
     startAgeYears: number;
     last: MonthlyResult;
     last65: MonthlyResult;
 };
 
-export function PensionOutput({ breakevenLabel, takeAhead, startAgeYears, last, last65 }: PensionOutputProps) {
+export function PensionOutput({ breakevenLabel, takeAhead, lateDelay, startAgeYears, last, last65 }: PensionOutputProps) {
     return (
         <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="mb-4 text-lg font-medium text-slate-800">出力</h2>
@@ -25,6 +26,12 @@ export function PensionOutput({ breakevenLabel, takeAhead, startAgeYears, last, 
                     <div className="flex justify-between gap-4 border-b border-slate-100 py-2">
                         <dt className="text-slate-600">繰上げ時の先取り累積差（65歳直前）</dt>
                         <dd className="text-right tabular-nums text-slate-900">{formatYen(takeAhead)}</dd>
+                    </div>
+                )}
+                {startAgeYears > AGE_STANDARD && (
+                    <div className="flex justify-between gap-4 border-b border-slate-100 py-2">
+                        <dt className="text-slate-600">65歳受給開始との累積差（受給開始直前）</dt>
+                        <dd className="text-right tabular-nums text-slate-900">{formatYen(lateDelay)}</dd>
                     </div>
                 )}
                 <div className="border-b border-slate-100 py-2">
