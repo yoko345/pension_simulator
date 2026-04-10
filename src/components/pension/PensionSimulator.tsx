@@ -1,6 +1,6 @@
 "use client";
 
-import { AGE_END, AGE_STANDARD, AGE_START, annualAt65FromInput, applyFamilyPreset, buildChartRows, earlyTakeAheadAmount, findBreakdownMonth, findBreakevenMonth, pensionAnnualFactor, runScenario, type FamilyPreset, type UserInput } from "@/lib/calculations";
+import { AGE_END, AGE_STANDARD, AGE_START, annualAt65FromInput, applyFamilyPreset, buildChartRows, earlyTakeAheadAmount, findBreakdownMonth, findBreakevenMonth, lateDelayForegoneAmount, pensionAnnualFactor, runScenario, type FamilyPreset, type UserInput } from "@/lib/calculations";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PensionBreakdown } from "./PensionBreakdown";
 import { PensionChart } from "./PensionChart";
@@ -60,6 +60,10 @@ export function PensionSimulator() {
     const cumSlide = useMemo(() => resultsSlide.map((r) => r.cumulativeNet), [resultsSlide]);
 
     const takeAhead = useMemo(() => earlyTakeAheadAmount(results65, resultsSlide), [results65, resultsSlide]);
+    const lateDelay = useMemo(
+        () => lateDelayForegoneAmount(results65, resultsSlide, startAgeYears),
+        [results65, resultsSlide, startAgeYears],
+    );
 
     const last = resultsSlide[resultsSlide.length - 1]!;
     const last65 = results65[results65.length - 1]!;
@@ -170,6 +174,7 @@ export function PensionSimulator() {
                     <PensionOutput
                         breakevenLabel={breakevenLabel}
                         takeAhead={takeAhead}
+                        lateDelay={lateDelay}
                         startAgeYears={startAgeYears}
                         last={last}
                         last65={last65}

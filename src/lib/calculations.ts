@@ -292,6 +292,17 @@ export function earlyTakeAheadAmount(results65: MonthlyResult[], resultsSlide: M
     return resultsSlide[idx]!.cumulativeNet - results65[idx]!.cumulativeNet;
 }
 
+/** 繰下げ時に65歳開始と比べてスライド受給開始直前までに受け取れなかった累積差 */
+export function lateDelayForegoneAmount(
+    results65: MonthlyResult[],
+    resultsSlide: MonthlyResult[],
+    startAgeYears: number,
+): number {
+    const idx = Math.round((startAgeYears - AGE_START) * 12) - 1;
+    if (idx < 0 || idx >= results65.length) return 0;
+    return results65[idx]!.cumulativeNet - resultsSlide[idx]!.cumulativeNet;
+}
+
 export function buildChartRows(results65: MonthlyResult[], resultsSlide: MonthlyResult[]): { age: number; cumulative65: number; cumulativeSlide: number }[] {
     const rows: { age: number; cumulative65: number; cumulativeSlide: number }[] = [];
     for (let i = 0; i < results65.length; i++) {
