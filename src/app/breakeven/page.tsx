@@ -11,6 +11,11 @@ const BreakevenAllChart = dynamic(
     { ssr: false },
 );
 
+const BreakevenInsights = dynamic(
+    () => import("@/components/pension/BreakevenInsights").then((m) => m.BreakevenInsights),
+    { ssr: false },
+);
+
 export default function BreakevenPage() {
     const { preset, basic, employee, spousePension, spouseIncome, householdSize, lifeInsurance, medicalExpense } =
         usePensionInput();
@@ -60,6 +65,12 @@ export default function BreakevenPage() {
                 {hasSpouse && <p>配偶者年金: {spousePension.toLocaleString()}円 / 配偶者所得: {spouseIncome.toLocaleString()}円</p>}
                 <p>世帯人数: {householdSize}人</p>
             </div>
+
+            {data !== null && (
+                <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <BreakevenInsights data={data} />
+                </div>
+            )}
         </div>
     );
 }
