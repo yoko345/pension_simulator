@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { PensionInputProvider } from "@/lib/pension-input-context";
 
 export const metadata: Metadata = {
     title: "年金繰上げ・繰下げシミュレーター",
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="ja">
-            <body className="min-h-screen antialiased">{children}</body>
+            <body className="min-h-screen antialiased">
+                <PensionInputProvider>{children}</PensionInputProvider>
+            </body>
         </html>
     );
 }

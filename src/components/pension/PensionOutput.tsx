@@ -2,6 +2,7 @@
 
 import { formatYen } from "@/lib/format-yen";
 import { AGE_STANDARD, type MonthlyResult } from "@/lib/calculations";
+import Link from "next/link";
 import { AGE_END } from "./pension-defaults";
 
 export type PensionOutputProps = {
@@ -19,7 +20,12 @@ export function PensionOutput({ breakevenLabel, takeAhead, lateDelay, startAgeYe
             <h2 className="mb-4 text-lg font-medium text-slate-800">出力</h2>
             <dl className="grid gap-3 text-sm">
                 <div className="border-b border-slate-100 py-2">
-                    <dt className="text-slate-600">損益分岐（完全逆転）</dt>
+                    <dt className="flex items-center gap-2 text-slate-600">
+                        損益分岐（完全逆転）
+                        <Link href="/breakeven" className="text-xs text-blue-600 underline hover:text-blue-800">
+                            全年齢を見る →
+                        </Link>
+                    </dt>
                     <dd className="mt-1 font-medium text-slate-900">{breakevenLabel}</dd>
                 </div>
                 {startAgeYears < AGE_STANDARD && (

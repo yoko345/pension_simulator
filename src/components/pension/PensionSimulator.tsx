@@ -1,6 +1,7 @@
 "use client";
 
 import { AGE_END, AGE_STANDARD, AGE_START, annualAt65FromInput, applyFamilyPreset, buildChartRows, earlyTakeAheadAmount, findBreakdownMonth, findBreakevenMonth, lateDelayForegoneAmount, pensionAnnualFactor, runScenario, type FamilyPreset, type UserInput } from "@/lib/calculations";
+import { usePensionInput } from "@/lib/pension-input-context";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PensionBreakdown } from "./PensionBreakdown";
 import { PensionChart } from "./PensionChart";
@@ -8,19 +9,20 @@ import { PensionDisclaimers } from "./PensionDisclaimers";
 import { PensionForm } from "./PensionForm";
 import { PensionHeader } from "./PensionHeader";
 import { PensionOutput } from "./PensionOutput";
-import { defaultPensionInput } from "./pension-defaults";
 
 export function PensionSimulator() {
-    const [preset, setPreset] = useState<FamilyPreset>("single");
-    const [basic, setBasic] = useState(defaultPensionInput.pension.basic);
-    const [employee, setEmployee] = useState(defaultPensionInput.pension.employee);
-    const [spousePension, setSpousePension] = useState(defaultPensionInput.pension.spousePension ?? 0);
+    const {
+        preset, setPreset,
+        basic, setBasic,
+        employee, setEmployee,
+        spousePension, setSpousePension,
+        spouseIncome, setSpouseIncome,
+        householdSize, setHouseholdSize,
+        lifeInsurance, setLifeInsurance,
+        medicalExpense, setMedicalExpense,
+        startAgeMonths, setStartAgeMonths,
+    } = usePensionInput();
     const hasSpouse = preset !== "single";
-    const [spouseIncome, setSpouseIncome] = useState(defaultPensionInput.family.spouseIncome);
-    const [householdSize, setHouseholdSize] = useState(defaultPensionInput.family.householdSize);
-    const [lifeInsurance, setLifeInsurance] = useState(defaultPensionInput.insurance.lifeInsurance);
-    const [medicalExpense, setMedicalExpense] = useState(defaultPensionInput.insurance.medicalExpense);
-    const [startAgeMonths, setStartAgeMonths] = useState(AGE_STANDARD * 12);
     const [showBreakeven, setShowBreakeven] = useState(false);
     const breakevenTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 

@@ -303,6 +303,40 @@ export function lateDelayForegoneAmount(
     return results65[idx]!.cumulativeNet - resultsSlide[idx]!.cumulativeNet;
 }
 
+export type BreakevenPoint = {
+    startAgeYears: number;
+    /** null = 100歳までに逆転しない */
+    breakevenAgeYears: number | null;
+};
+
+/** 全受給開始年齢（60〜75歳・月単位、計181パターン）の損益分岐点を一括算出 */
+export function computeAllBreakevens(
+    input: Omit<UserInput, "startAgeYears">,
+    annual65: number,
+): BreakevenPoint[] {
+    const results65 = runScenario({ ...input, startAgeYears: AGE_STANDARD }, AGE_STANDARD, annual65);
+    const cum65 = results65.map((r) => r.cumulativeNet);
+    const points: BreakevenPoint[] = [];
+    for (let m = AGE_START * 12; m <= 75 * 12; m++) {
+        const startAgeYears = m / 12;
+        const resultsSlide = runScenario({ ...input, startAgeYears }, startAgeYears, annual65);
+        const cumSlide = resultsSlide.map((r) => r.cumulativeNet);
+        let idx: number | null;
+        if (startAgeYears === AGE_STANDARD) {
+            idx = null;
+        } else if (startAgeYears < AGE_STANDARD) {
+            idx = findBreakdownMonth(cumSlide, cum65);
+        } else {
+            idx = findBreakevenMonth(cumSlide, cum65);
+        }
+        points.push({
+            startAgeYears,
+            breakevenAgeYears: idx !== null ? AGE_START + idx / 12 : null,
+        });
+    }
+    return points;
+}
+
 export function buildChartRows(results65: MonthlyResult[], resultsSlide: MonthlyResult[]): { age: number; cumulative65: number; cumulativeSlide: number }[] {
     const rows: { age: number; cumulative65: number; cumulativeSlide: number }[] = [];
     for (let i = 0; i < results65.length; i++) {
